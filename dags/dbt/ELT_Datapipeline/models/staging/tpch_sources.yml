@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: tpch
+    database: snowflake_sample_data # This is the database where the TPCH data is stored
+    schema: tpch_sf1 # This is the schema where the TPCH data is stored
+    tables:
+      - name: orders # This is the name of the table in the TPCH schema
+        columns:
+          - name: o_orderkey # This is the name of the column in the orders table
+            tests: 
+              - unique
+              - not_null # These tests ensure that the o_orderkey column in the orders table is unique and not null
+      - name: lineitem # This is the name of the table in the TPCH schema
+        columns:
+          - name: l_orderkey    # This is the name of the column in the lineitem table
+            tests:
+              - relationships:
+                  to: source('tpch', 'orders') # This specifies that the l_orderkey column in the lineitem table should reference the o_orderkey column in the orders table
+                  field: o_orderkey
